@@ -1,0 +1,6 @@
+renders/
+snapshots/
+node_modules/
+.hyperframes/
+.DS_Store
+*.log

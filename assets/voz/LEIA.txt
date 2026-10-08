@@ -1,0 +1,1 @@
+Salve aqui os WAVs gerados no Voicebox: cena-1.wav a cena-7.wav (textos em SCRIPT.md).

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1350">
+    <title>Onde o Dinheiro Cai · vídeo</title>
+    <script src="assets/js/gsap.min.js"></script>
+    <script src="assets/js/mapdata.js"></script>
+    <script src="assets/js/ufdata.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+
+      :root {
+        --bg: #f6f7f3;
+        --surface: #ffffff;
+        --sunk: #edf1ec;
+        --ink: #142d35;
+        --ink-h: #15323a;
+        --ink-2: #45606a;
+        --muted: #5e6f74;
+        --line: #d6e0da;
+        --line-2: #a9bbb3;
+        --alert: #b0503a;
+        --alert-bg: #fff7f4;
+        --alert-ic: #fbede8;
+        --accent: #2f7c59;
+        --accent-bg: #f3faf5;
+        --accent-ic: #e5f1ea;
+        --hl: #cce9d6;
+        --hl-alert: #f6d9cf;
+        --deep: #173b43;
+        --mint: #a9dfb9;
+        --track: #e9f0ea;
+        --shadow: 0 1px 2px rgb(15 49 46 / 0.04), 0 12px 30px rgb(15 49 46 / 0.06);
+        --sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+        --mono: "JetBrains Mono", Menlo, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1350px; overflow: hidden; background: var(--bg); }
+      #root {
+        position: relative; width: 100%; height: 100%; overflow: hidden;
+        background: var(--bg); color: var(--ink); font-family: var(--sans);
+        -webkit-font-smoothing: antialiased; letter-spacing: -0.015em;
+      }
+      .ground {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(48% 40% at 84% 22%, rgba(115, 188, 145, 0.2), transparent 72%),
+          radial-gradient(40% 35% at 10% 96%, rgba(98, 171, 190, 0.1), transparent 74%),
+          var(--bg);
+      }
+      .grid {
+        position: absolute; inset: 0; opacity: 0.46;
+        background:
+          linear-gradient(90deg, rgba(29, 86, 77, 0.07) 1px, transparent 1px) 0 0 / 72px 72px,
+          linear-gradient(rgba(29, 86, 77, 0.07) 1px, transparent 1px) 0 0 / 72px 72px;
+      }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .pad { position: absolute; left: 80px; right: 80px; }
+
+      .tag {
+        position: absolute; left: 80px; top: 84px; display: flex; align-items: center; gap: 14px;
+        font-family: var(--mono); font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+      }
+      .tag .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); display: block; }
+      .brand { display: flex; align-items: center; gap: 14px; }
+      .brand svg { width: 44px; height: 44px; display: block; }
+
+      h1, h2 { font-weight: 500; color: var(--ink-h); letter-spacing: -0.06em; line-height: 0.98; }
+      .w { display: inline-block; }
+      .ln { display: block; }
+
+      .hl { background-image: linear-gradient(transparent 60%, var(--hl) 60%); background-repeat: no-repeat; background-size: 0% 100%; }
+      .hl-a { background-image: linear-gradient(transparent 60%, var(--hl-alert) 60%); background-repeat: no-repeat; background-size: 0% 100%; }
+
+      .card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
+      }
+      .ic {
+        width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex: none;
+        background: var(--accent-ic); color: var(--accent);
+      }
+      .ic svg { width: 22px; height: 22px; display: block; }
+      .ic.a { background: var(--alert-ic); color: var(--alert); }
+      .lbl { font-family: var(--mono); font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+      .chip {
+        display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px;
+        border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.84);
+        font-size: 22px; color: var(--ink-2); white-space: nowrap;
+      }
+      .chip b { color: var(--ink); font-weight: 600; }
+      .src { font-family: var(--mono); font-size: 17px; color: var(--muted); letter-spacing: 0.02em; }
+
+      /* ---------- S1 ---------- */
+      #s1-h { position: absolute; left: 80px; top: 250px; font-size: 140px; letter-spacing: -0.075em; line-height: 0.95; }
+      #s1-lead { position: absolute; left: 80px; top: 870px; width: 880px; font-size: 38px; line-height: 1.32; color: #587078; }
+      #s1-lead b { font-weight: 500; color: #1d4b48; }
+      #s1-badges { position: absolute; left: 80px; top: 1130px; display: flex; gap: 14px; }
+
+      /* ---------- S2 ---------- */
+      .hbox { position: absolute; left: 80px; top: 150px; width: 920px; height: 170px; }
+      .hbox h2 { position: absolute; left: 0; top: 0; width: 920px; font-size: 70px; line-height: 1.02; }
+      #s2-counter { position: absolute; left: 80px; top: 345px; }
+      #s2-counter .lbl { display: block; margin-bottom: 6px; }
+      #s2-val { font-size: 104px; font-weight: 500; letter-spacing: -0.07em; color: var(--ink-h); line-height: 1; font-variant-numeric: tabular-nums; }
+      #map3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; display: block; }
+      #s2-chips { position: absolute; left: 80px; top: 1190px; display: flex; gap: 12px; }
+      #s2-src { position: absolute; left: 80px; top: 1268px; }
+      #s2-legend { position: absolute; left: 60px; top: 930px; width: 520px; }
+      #s2-legend .bar { height: 12px; border-radius: 6px; margin: 10px 0 8px; background: linear-gradient(90deg, #ece4dd, var(--alert)); }
+      #s2-legend .ends { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 16px; color: var(--muted); }
+      .fact { position: absolute; left: 620px; width: 380px; padding: 20px 24px; border-radius: 20px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+      .fact .top { display: flex; align-items: center; gap: 12px; }
+      .fact .num { font-size: 66px; font-weight: 500; letter-spacing: -0.06em; line-height: 1; margin: 12px 0 6px; font-variant-numeric: tabular-nums; }
+      .fact p { font-size: 21px; line-height: 1.3; color: var(--ink-2); }
+      #f1 { top: 380px; background: var(--alert-bg); }
+      #f1 .num { color: var(--alert); }
+      #f2 { top: 616px; background: var(--accent-bg); }
+      #f2 .num { color: var(--accent); }
+      #f3 { top: 852px; background: var(--surface); }
+      #f3 .num { color: var(--ink-h); }
+      #s2-take { position: absolute; left: 80px; top: 1110px; width: 920px; font-size: 38px; line-height: 1.25; font-weight: 500; letter-spacing: -0.03em; color: var(--ink-h); }
+
+      /* ---------- S3 ---------- */
+      #s3-h { position: absolute; left: 80px; top: 150px; font-size: 76px; }
+      #s3-sub { position: absolute; left: 80px; top: 246px; font-size: 28px; color: var(--ink-2); }
+      #s3-leg { position: absolute; left: 80px; top: 316px; display: flex; gap: 26px; font-size: 22px; color: var(--ink-2); }
+      #s3-leg span { display: flex; align-items: center; gap: 10px; }
+      #s3-leg i { width: 16px; height: 16px; border-radius: 4px; display: block; }
+      .row { position: absolute; left: 80px; width: 920px; height: 170px; }
+      .row .head { display: flex; justify-content: space-between; align-items: baseline; }
+      .row .name { font-size: 32px; font-weight: 500; letter-spacing: -0.03em; color: var(--ink-h); }
+      .ratio {
+        font-family: var(--mono); font-size: 24px; padding: 6px 16px; border-radius: 999px;
+        background: var(--alert-ic); color: var(--alert); font-variant-numeric: tabular-nums;
+      }
+      .ratio.n { background: var(--sunk); color: var(--ink-2); }
+      .ratio.g { background: var(--accent-ic); color: var(--accent); }
+      .bars { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+      .bl { display: flex; align-items: center; gap: 14px; height: 28px; }
+      .bar-f, .bar-r { height: 26px; border-radius: 7px; display: block; transform-origin: left center; }
+      .bar-f { background: var(--alert); }
+      .bar-r { background: var(--accent); }
+      .bv { font-family: var(--mono); font-size: 21px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+      #r1 { top: 400px; } #r2 { top: 572px; } #r3 { top: 744px; } #r4 { top: 916px; }
+      #s3-punch { position: absolute; left: 80px; top: 1112px; width: 900px; font-size: 44px; line-height: 1.2; font-weight: 500; letter-spacing: -0.035em; color: var(--ink-h); }
+
+      /* ---------- S4 ---------- */
+      #s4-quote { position: absolute; left: 80px; top: 150px; width: 920px; padding: 38px 44px 34px; }
+      #s4-quote .q { font-size: 120px; line-height: 0.6; color: rgb(137, 152, 145); font-weight: 500; height: 52px; }
+      #s4-quote p { font-size: 52px; line-height: 1.12; font-weight: 500; letter-spacing: -0.045em; color: var(--ink-h); }
+      #s4-quote .who { margin-top: 18px; }
+      #s4-test { position: absolute; left: 80px; top: 520px; font-size: 30px; font-weight: 500; color: var(--accent); letter-spacing: -0.02em; }
+      .vcard { position: absolute; top: 580px; width: 410px; height: 330px; padding: 26px 28px; }
+      .vcard .top { display: flex; align-items: center; gap: 12px; }
+      .vcard .num { font-size: 96px; font-weight: 500; letter-spacing: -0.06em; line-height: 1; margin: 26px 0 14px; font-variant-numeric: tabular-nums; }
+      .vcard p { font-size: 24px; line-height: 1.3; color: var(--ink-2); }
+      #v1 { left: 80px; } #v1 .num { color: var(--accent); }
+      #v2 { left: 590px; } #v2 .num { color: var(--alert); }
+      #s4-vs { position: absolute; left: 490px; top: 732px; width: 100px; text-align: center; font-family: var(--mono); font-size: 17px; color: var(--muted); letter-spacing: 0.04em; }
+      #s4-c1 { position: absolute; left: 80px; top: 960px; width: 920px; font-size: 44px; line-height: 1.16; font-weight: 500; letter-spacing: -0.035em; color: var(--ink-h); }
+      #s4-c2 { position: absolute; left: 80px; top: 1086px; width: 920px; font-size: 44px; line-height: 1.16; font-weight: 500; letter-spacing: -0.035em; color: var(--accent); }
+      #s4-src { position: absolute; left: 80px; top: 1236px; }
+
+      /* ---------- S5 ---------- */
+      #s5-h { position: absolute; left: 80px; top: 150px; width: 920px; font-size: 70px; line-height: 1.02; }
+      #s5-card { position: absolute; left: 80px; top: 420px; width: 920px; height: 430px; padding: 34px 40px; }
+      #axis { position: absolute; left: 40px; right: 40px; top: 250px; height: 4px; background: var(--line-2); border-radius: 2px; transform-origin: left center; display: block; }
+      #band { position: absolute; top: 150px; height: 130px; border-radius: 12px; background: var(--accent-ic); border: 1px dashed rgba(47, 124, 89, 0.45); transform-origin: right center; }
+      .tick { position: absolute; top: 272px; width: 60px; margin-left: -30px; text-align: center; font-family: var(--mono); font-size: 18px; color: var(--muted); }
+      #chance { position: absolute; top: 160px; width: 2px; height: 104px; margin-left: -1px; background: repeating-linear-gradient(var(--muted) 0 6px, transparent 6px 12px); }
+      #chance-l { position: absolute; top: 120px; width: 240px; margin-left: -120px; text-align: center; font-family: var(--mono); font-size: 17px; color: var(--muted); }
+      .vd { position: absolute; top: 234px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 2px 6px rgb(15 49 46 / 0.2); }
+      #band-l { position: absolute; top: 330px; right: 40px; font-size: 26px; font-weight: 500; color: var(--accent); letter-spacing: -0.02em; text-align: right; }
+      #s5-axis-l { position: absolute; left: 40px; top: 34px; }
+      #s5-txt { position: absolute; left: 80px; top: 905px; width: 920px; font-size: 38px; line-height: 1.25; font-weight: 500; letter-spacing: -0.03em; color: var(--ink-h); }
+      #s5-note {
+        position: absolute; left: 80px; top: 1095px; width: 920px; padding: 22px 28px; border-radius: 14px;
+        background: #fff; border: 1px solid #d6e3dc; border-left: 4px solid var(--accent); box-shadow: var(--shadow);
+        font-size: 25px; line-height: 1.35; color: var(--ink-2);
+      }
+
+      /* ---------- S6 ---------- */
+      #s6-h { position: absolute; left: 80px; top: 150px; width: 920px; font-size: 72px; line-height: 1.02; }
+      .qcard { position: absolute; left: 80px; width: 920px; height: 178px; padding: 30px 34px; display: flex; gap: 28px; align-items: flex-start; }
+      .qcard .n {
+        width: 72px; height: 72px; border-radius: 18px; flex: none; display: grid; place-items: center;
+        background: var(--accent-ic); color: var(--accent); font-family: var(--mono); font-size: 32px; font-weight: 500;
+      }
+      .qcard h3 { font-size: 42px; font-weight: 500; letter-spacing: -0.04em; color: var(--ink-h); line-height: 1.1; }
+      .qcard p { margin-top: 12px; font-size: 26px; color: var(--ink-2); line-height: 1.3; }
+      #q1 { top: 410px; } #q2 { top: 612px; } #q3 { top: 814px; }
+      #s6-lim { position: absolute; left: 80px; top: 1060px; width: 920px; font-family: var(--mono); font-size: 20px; line-height: 1.7; color: var(--muted); }
+      #s6-lim b { color: var(--ink-2); font-weight: 500; }
+
+      /* ---------- S7 ---------- */
+      #s7-bg {
+        position: absolute; inset: 0;
+        background: radial-gradient(60% 45% at 80% 20%, rgba(169, 223, 185, 0.14), transparent 70%), var(--deep);
+      }
+      #s7-grid {
+        position: absolute; inset: 0;
+        background:
+          linear-gradient(90deg, rgba(230, 240, 233, 0.05) 1px, transparent 1px) 0 0 / 72px 72px,
+          linear-gradient(rgba(230, 240, 233, 0.05) 1px, transparent 1px) 0 0 / 72px 72px;
+      }
+      #map2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; display: block; }
+      #s7-tag { color: #8ea8ad; }
+      #s7-h { position: absolute; left: 80px; top: 300px; font-size: 128px; letter-spacing: -0.075em; color: #f5faf6; line-height: 0.95; }
+      #s7-search {
+        position: absolute; left: 80px; top: 640px; width: 780px; height: 100px; border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex; align-items: center; gap: 20px; padding: 0 36px; font-size: 38px; color: #f5faf6;
+      }
+      #s7-search svg { width: 34px; height: 34px; display: block; color: #a9c4c0; flex: none; }
+      #s7-typed { white-space: pre; }
+      #s7-ph { color: #8ea8ad; white-space: pre; }
+      #caret { width: 3px; height: 44px; background: var(--mint); display: block; }
+      #s7-url {
+        position: absolute; left: 80px; top: 800px; height: 92px; padding: 0 38px; border-radius: 14px;
+        background: var(--mint); color: var(--deep); display: flex; align-items: center; gap: 14px;
+        font-size: 40px; font-weight: 600; letter-spacing: -0.03em; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+      }
+      #s7-tl { position: absolute; left: 80px; top: 960px; width: 900px; font-size: 44px; line-height: 1.2; color: #c7d5d4; font-weight: 500; letter-spacing: -0.035em; }
+      #s7-sig { position: absolute; left: 80px; top: 1200px; font-family: var(--mono); font-size: 20px; color: #8ea8ad; letter-spacing: 0.04em; }
+      #s7-sig b { color: #f5faf6; font-weight: 500; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-9ttv" id="root" data-composition-id="main" data-start="0" data-duration="82" data-width="1080" data-height="1350">
+      <div data-hf-id="hf-ygft" class="ground"></div>
+      <div data-hf-id="hf-kxq8" class="grid"></div>
+
+      <!-- ===================== S1 · A pergunta ===================== -->
+      <div data-hf-id="hf-ns82" id="el-s1" class="scene">
+        <div data-hf-id="hf-8hau" class="tag brand" id="s1-tag">
+          <svg data-hf-id="hf-s0fo" viewBox="0 0 44 44" aria-hidden="true"><circle data-hf-id="hf-e11v" cx="22" cy="22" r="22" fill="#2f7c59" /><path data-hf-id="hf-02rb" d="M22 11c-4.4 0-8 3.4-8 7.8 0 5.6 8 14.2 8 14.2s8-8.6 8-14.2C30 14.4 26.4 11 22 11Zm0 10.6a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8Z" fill="#f6f7f3" /></svg>
+          <span data-hf-id="hf-2f7x">Onde o Dinheiro Cai · Emendas &amp; Censo 2022</span>
+        </div>
+        <h1 data-hf-id="hf-f774" id="s1-h">
+          <span data-hf-id="hf-smev" class="ln"><span data-hf-id="hf-v845" class="w">O</span> <span data-hf-id="hf-3okg" class="w">dinheiro</span></span>
+          <span data-hf-id="hf-oupj" class="ln"><span data-hf-id="hf-ae5x" class="w">público</span></span>
+          <span data-hf-id="hf-ogei" class="ln"><span data-hf-id="hf-cmzm" class="w">chega</span> <span data-hf-id="hf-plv2" class="w">onde</span></span>
+          <span data-hf-id="hf-o23h" class="ln"><span data-hf-id="hf-6fxd" class="w">faz</span> <span data-hf-id="hf-lfhx" class="w">falta?</span></span>
+        </h1>
+        <p data-hf-id="hf-ztgl" id="s1-lead">Emendas parlamentares movimentam bilhões todo ano. A pergunta é simples: <b data-hf-id="hf-xzjl" class="hl" id="s1-hl">a necessidade de cada cidade</b> entra nessa conta?</p>
+        <div data-hf-id="hf-qkcu" id="s1-badges">
+          <span data-hf-id="hf-wirp" class="chip s1b">Emendas Pix <b data-hf-id="hf-vj59">EC 105</b></span>
+          <span data-hf-id="hf-sqyr" class="chip s1b">Censo 2022 <b data-hf-id="hf-3rmm">IBGE</b></span>
+          <span data-hf-id="hf-gksz" class="chip s1b"><b data-hf-id="hf-9si8">5.499</b> municípios</span>
+        </div>
+      </div>
+
+      <!-- ===================== S2 · O cruzamento + mapa ===================== -->
+      <div data-hf-id="hf-ju41" id="el-s2" class="scene">
+        <canvas id="map3d" width="1080" height="1350"></canvas>
+        <div data-hf-id="hf-og20" class="tag"><span data-hf-id="hf-9gry" class="dot"></span><span data-hf-id="hf-dew9" id="s2-tagt">01 · O cruzamento</span></div>
+        <div data-hf-id="hf-xv3v" class="hbox">
+          <h2 data-hf-id="hf-nzh9" id="s2-ha"><span data-hf-id="hf-d0rg" class="w">Cruzei</span> <span data-hf-id="hf-njvb" class="w">cada</span> <span data-hf-id="hf-zfta" class="w">emenda</span> <span data-hf-id="hf-55pd" class="w">Pix</span> <span data-hf-id="hf-h1tx" class="w">com</span> <span data-hf-id="hf-bzw5" class="w">o</span> <span data-hf-id="hf-o2rk" class="w">Censo</span> <span data-hf-id="hf-o56o" class="w">2022.</span></h2>
+          <h2 data-hf-id="hf-rxla" id="s2-hb"><span data-hf-id="hf-o826" class="w">Onde</span> <span data-hf-id="hf-g3ag" class="w">falta</span> <span data-hf-id="hf-lcwp" class="w">esgoto,</span> <span data-hf-id="hf-jmp5" class="w">o</span> <span data-hf-id="hf-6ivs" class="w">dinheiro</span> <span data-hf-id="hf-8tgp" class="w">quase</span> <span data-hf-id="hf-kmus" class="w">não</span> <span data-hf-id="hf-uilg" class="w">chega.</span></h2>
+        </div>
+        <div data-hf-id="hf-tol5" id="s2-counter">
+          <span data-hf-id="hf-8ouy" class="lbl">Transferências especiais · 2020 a 2026</span>
+          <div data-hf-id="hf-y1o7" id="s2-val">R$ 0,00 bi</div>
+        </div>
+        <div data-hf-id="hf-0wh8" id="s2-chips">
+          <span data-hf-id="hf-ilbj" class="chip s2c"><b data-hf-id="hf-5zod">54.687</b> planos de ação</span>
+          <span data-hf-id="hf-it5l" class="chip s2c"><b data-hf-id="hf-yl48">5.499</b> municípios · 98,7%</span>
+        </div>
+        <div data-hf-id="hf-s01n" id="s2-src" class="src">Fontes: Transferegov (EC 105/2019) · IBGE, Censo 2022</div>
+        <div data-hf-id="hf-1iqc" id="s2-legend">
+          <span data-hf-id="hf-x5k1" class="lbl">Altura e cor: falta de esgoto</span>
+          <span data-hf-id="hf-00lf" class="bar" style="display: block"></span>
+          <div data-hf-id="hf-szpa" class="ends"><span data-hf-id="hf-tzpu">0%</span><span data-hf-id="hf-ird6">100% das casas</span></div>
+        </div>
+        <div data-hf-id="hf-agrn" class="fact" id="f1">
+          <div data-hf-id="hf-sijt" class="top"><span data-hf-id="hf-94lk" class="ic a"><svg data-hf-id="hf-e32r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path data-hf-id="hf-8o7t" d="M12 3c3 4 6 7.2 6 10.5A6 6 0 0 1 6 13.5C6 10.2 9 7 12 3Z" /></svg></span><span data-hf-id="hf-ejql" class="lbl">Sem esgoto adequado</span></div>
+          <div data-hf-id="hf-2lmm" class="num" id="f1n">0,0%</div>
+          <p data-hf-id="hf-f44n">das casas, na média dos municípios</p>
+        </div>
+        <div data-hf-id="hf-zla0" class="fact" id="f2">
+          <div data-hf-id="hf-8kpp" class="top"><span data-hf-id="hf-8dw9" class="ic"><svg data-hf-id="hf-8j1v" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path data-hf-id="hf-63aa" d="M4 12h16M14 6l6 6-6 6" /></svg></span><span data-hf-id="hf-bspo" class="lbl">Destino: saneamento</span></div>
+          <div data-hf-id="hf-v6vz" class="num" id="f2n">0,0%</div>
+          <p data-hf-id="hf-eqm3">das obras de emenda</p>
+        </div>
+        <div data-hf-id="hf-0cxt" class="fact" id="f3">
+          <div data-hf-id="hf-9rms" class="top"><span data-hf-id="hf-hovh" class="ic"><svg data-hf-id="hf-84qu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path data-hf-id="hf-sevh" d="M8 3 5 21M16 3l3 18M12 5v3M12 11v3M12 17v3" /></svg></span><span data-hf-id="hf-ecxg" class="lbl">Destino: vias</span></div>
+          <div data-hf-id="hf-ind4" class="num" id="f3n">0,0%</div>
+          <p data-hf-id="hf-kmw2">onde a falta de pavimentação é de 15,8%</p>
+        </div>
+        <p data-hf-id="hf-hzt1" id="s2-take">Em <span data-hf-id="hf-or06" class="hl-a" id="s2-hl">49% das cidades</span>, mais da metade das casas está sem esgoto e nenhuma obra de emenda foi para saneamento.</p>
+      </div>
+
+      <!-- ===================== S3 · A distância ===================== -->
+      <div data-hf-id="hf-j2g8" id="el-s3" class="scene">
+        <div data-hf-id="hf-oqm8" class="tag"><span data-hf-id="hf-zcc2" class="dot"></span><span data-hf-id="hf-tlni">02 · A distância</span></div>
+        <h2 data-hf-id="hf-4xlv" id="s3-h">O que falta e o que chegou</h2>
+        <p data-hf-id="hf-brpo" id="s3-sub">Média de 4.079 municípios, por setor</p>
+        <div data-hf-id="hf-dxpo" id="s3-leg">
+          <span data-hf-id="hf-1p68"><i data-hf-id="hf-oc1b" style="background: var(--alert)"></i>falta (Censo 2022)</span>
+          <span data-hf-id="hf-5k25"><i data-hf-id="hf-njrb" style="background: var(--accent)"></i>recebeu (obras de emenda)</span>
+        </div>
+        <div data-hf-id="hf-ilt9" class="row" id="r1">
+          <div data-hf-id="hf-z992" class="head"><span data-hf-id="hf-hibe" class="name">Esgotamento sanitário</span><span data-hf-id="hf-s2qp" class="ratio" id="r1x">9,0×</span></div>
+          <div data-hf-id="hf-umx2" class="bars">
+            <div data-hf-id="hf-ypvu" class="bl"><span data-hf-id="hf-ekui" class="bar-f" style="width: 605.8px"></span><span data-hf-id="hf-91a4" class="bv">63,1%</span></div>
+            <div data-hf-id="hf-ar7y" class="bl"><span data-hf-id="hf-ygd3" class="bar-r" style="width: 67.2px"></span><span data-hf-id="hf-uudt" class="bv">7,0%</span></div>
+          </div>
+        </div>
+        <div data-hf-id="hf-mjxa" class="row" id="r2">
+          <div data-hf-id="hf-gwvu" class="head"><span data-hf-id="hf-81nn" class="name">Drenagem</span><span data-hf-id="hf-8dbg" class="ratio" id="r2x">8,5×</span></div>
+          <div data-hf-id="hf-rgy2" class="bars">
+            <div data-hf-id="hf-b5iz" class="bl"><span data-hf-id="hf-ibhh" class="bar-f" style="width: 570.2px"></span><span data-hf-id="hf-to6e" class="bv">59,4%</span></div>
+            <div data-hf-id="hf-bju0" class="bl"><span data-hf-id="hf-8bpz" class="bar-r" style="width: 67.2px"></span><span data-hf-id="hf-04at" class="bv">7,0%</span></div>
+          </div>
+        </div>
+        <div data-hf-id="hf-qi1b" class="row" id="r3">
+          <div data-hf-id="hf-hb6v" class="head"><span data-hf-id="hf-44ff" class="name">Calçadas e urbanismo</span><span data-hf-id="hf-6wco" class="ratio n" id="r3x">1,1×</span></div>
+          <div data-hf-id="hf-rv93" class="bars">
+            <div data-hf-id="hf-8rot" class="bl"><span data-hf-id="hf-lvgp" class="bar-f" style="width: 198.7px"></span><span data-hf-id="hf-nzzt" class="bv">20,7%</span></div>
+            <div data-hf-id="hf-95zu" class="bl"><span data-hf-id="hf-ct57" class="bar-r" style="width: 185.3px"></span><span data-hf-id="hf-ceo5" class="bv">19,3%</span></div>
+          </div>
+        </div>
+        <div data-hf-id="hf-ug5c" class="row" id="r4">
+          <div data-hf-id="hf-hphw" class="head"><span data-hf-id="hf-cus0" class="name">Pavimentação e vias</span><span data-hf-id="hf-5l4p" class="ratio g" id="r4x">0,3×</span></div>
+          <div data-hf-id="hf-s9k4" class="bars">
+            <div data-hf-id="hf-9kav" class="bl"><span data-hf-id="hf-deg5" class="bar-f" style="width: 151.7px"></span><span data-hf-id="hf-u7de" class="bv">15,8%</span></div>
+            <div data-hf-id="hf-9ylw" class="bl"><span data-hf-id="hf-87xo" class="bar-r" style="width: 453.1px"></span><span data-hf-id="hf-lu8d" class="bv">47,2%</span></div>
+          </div>
+        </div>
+        <p data-hf-id="hf-ony3" id="s3-punch">Pavimentação é o <span data-hf-id="hf-zy6b" class="hl" id="s3-hl">único setor que recebe mais do que falta</span>: três vezes mais.</p>
+      </div>
+
+      <!-- ===================== S4 · A objeção ===================== -->
+      <div data-hf-id="hf-f4c7" id="el-s4" class="scene">
+        <div data-hf-id="hf-njp5" class="tag"><span data-hf-id="hf-zqn3" class="dot"></span><span data-hf-id="hf-tx29">03 · A objeção testada</span></div>
+        <div data-hf-id="hf-q8xa" class="card" id="s4-quote">
+          <div data-hf-id="hf-di4n" class="q">“</div>
+          <p data-hf-id="hf-i6js">Mas a prefeitura não tem estrutura para fazer saneamento.</p>
+          <div data-hf-id="hf-65od" class="lbl who">A primeira explicação que eu ouvi</div>
+        </div>
+        <div data-hf-id="hf-znc3" id="s4-test">Dá para testar.</div>
+        <div data-hf-id="hf-rwhz" class="card vcard" id="v1">
+          <div data-hf-id="hf-9dbr" class="top"><span data-hf-id="hf-ivsk" class="ic"><svg data-hf-id="hf-h0hq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-lvfk" d="m5 12.5 4.5 4.5L19 7.5" /></svg></span><span data-hf-id="hf-u5e5" class="lbl">Onde falta asfalto</span></div>
+          <div data-hf-id="hf-4wxq" class="num" id="v1n">+0,000</div>
+          <p data-hf-id="hf-kook">o dinheiro em vias acompanha a falta</p>
+        </div>
+        <div data-hf-id="hf-gtt9" id="s4-vs">contra</div>
+        <div data-hf-id="hf-h10c" class="card vcard" id="v2">
+          <div data-hf-id="hf-ak8u" class="top"><span data-hf-id="hf-m9ds" class="ic a"><svg data-hf-id="hf-zf3a" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path data-hf-id="hf-myyo" d="M7 7l10 10M17 7 7 17" /></svg></span><span data-hf-id="hf-ebu2" class="lbl">Onde falta esgoto</span></div>
+          <div data-hf-id="hf-8wmo" class="num" id="v2n">0,000</div>
+          <p data-hf-id="hf-t4us">o dinheiro em saneamento não acompanha a falta</p>
+        </div>
+        <p data-hf-id="hf-632c" id="s4-c1">A mesma prefeitura que não faz rede de esgoto consegue fazer estrada.</p>
+        <p data-hf-id="hf-38lx" id="s4-c2"><span data-hf-id="hf-b7bl" class="hl" id="s4-hl">Pesa o tipo de obra: a rápida e visível.</span></p>
+        <div data-hf-id="hf-bdhp" id="s4-src" class="src">Coeficientes de MQO, efeito fixo de estado · evidência descritiva, não causal</div>
+      </div>
+
+      <!-- ===================== S5 · Votos ===================== -->
+      <div data-hf-id="hf-b686" id="el-s5" class="scene">
+        <div data-hf-id="hf-ny06" class="tag"><span data-hf-id="hf-04y4" class="dot"></span><span data-hf-id="hf-ssjn">04 · O mapa dos votos</span></div>
+        <h2 data-hf-id="hf-io3a" id="s5-h">E o voto? Em alguns mandatos, o dinheiro segue a base eleitoral.</h2>
+        <div data-hf-id="hf-p44n" class="card" id="s5-card">
+          <span data-hf-id="hf-5lku" class="lbl" id="s5-axis-l">Cidades onde o mandato teve voto, da menos à mais votada</span>
+          <div data-hf-id="hf-b4as" id="band" style="left: calc(40px + 0.92 * 760px); width: calc(0.08 * 760px + 14px)"></div>
+          <div data-hf-id="hf-aqqx" id="chance" style="left: calc(40px + 0.5 * 760px)"></div>
+          <div data-hf-id="hf-9d3e" id="chance-l" style="left: calc(40px + 0.5 * 760px)">o acaso daria ~50</div>
+          <span data-hf-id="hf-dbct" id="axis"></span>
+          <div data-hf-id="hf-0j7g" class="tick" style="left: 40px">0</div>
+          <div data-hf-id="hf-iayw" class="tick" style="left: calc(40px + 0.25 * 760px)">25</div>
+          <div data-hf-id="hf-0k6a" class="tick" style="left: calc(40px + 0.5 * 760px)">50</div>
+          <div data-hf-id="hf-6e54" class="tick" style="left: calc(40px + 0.75 * 760px)">75</div>
+          <div data-hf-id="hf-fayb" class="tick" style="left: calc(40px + 760px)">100</div>
+          <div data-hf-id="hf-wvbl" id="dots"></div>
+          <div data-hf-id="hf-vcfm" id="band-l">11 destinos, todos acima do percentil 92</div>
+        </div>
+        <p data-hf-id="hf-8zic" id="s5-txt">Um mandato com voto em 554 cidades mandou emendas para 11. Nenhuma ficou na metade de baixo da fila.</p>
+        <div data-hf-id="hf-sa3i" id="s5-note">Indicar emenda para a base é legal e faz parte do mandato. Isso não é indício de irregularidade.</div>
+      </div>
+
+      <!-- ===================== S6 · Proposta ===================== -->
+      <div data-hf-id="hf-7845" id="el-s6" class="scene">
+        <div data-hf-id="hf-mr33" class="tag"><span data-hf-id="hf-0j95" class="dot"></span><span data-hf-id="hf-d9jw">05 · O que eu proponho</span></div>
+        <h2 data-hf-id="hf-wbpd" id="s6-h">Antes de pedir ou indicar uma emenda, três perguntas.</h2>
+        <div data-hf-id="hf-pz5d" class="card qcard" id="q1">
+          <span data-hf-id="hf-e3y0" class="n">1</span>
+          <div data-hf-id="hf-yeow"><h3 data-hf-id="hf-e22k">Qual é a carência medida da cidade?</h3><p data-hf-id="hf-ugyu">Diagnóstico com dado, não só percepção.</p></div>
+        </div>
+        <div data-hf-id="hf-tx9e" class="card qcard" id="q2">
+          <span data-hf-id="hf-cx0x" class="n">2</span>
+          <div data-hf-id="hf-y7yw"><h3 data-hf-id="hf-glep">A cidade consegue manter a obra?</h3><p data-hf-id="hf-3ly3">Custeio, equipe e folha depois da inauguração.</p></div>
+        </div>
+        <div data-hf-id="hf-xvdf" class="card qcard" id="q3">
+          <span data-hf-id="hf-dbby" class="n">3</span>
+          <div data-hf-id="hf-x11t"><h3 data-hf-id="hf-0k5l">O que foi entregue de fato?</h3><p data-hf-id="hf-2uk0">Obra funcionando, não só valor pago.</p></div>
+        </div>
+        <p data-hf-id="hf-3vli" id="s6-lim"><b data-hf-id="hf-2t0e">Limites:</b> evidência descritiva, não causal · cobre emendas Pix (EC 105/2019) · resultado preliminar · dados e scripts abertos</p>
+      </div>
+
+      <!-- ===================== S7 · Sua cidade ===================== -->
+      <div data-hf-id="hf-48uk" id="el-s7" class="scene">
+        <div data-hf-id="hf-ibkl" id="s7-bg"></div>
+        <div data-hf-id="hf-2p4c" id="s7-grid"></div>
+        <canvas data-hf-id="hf-31ft" id="map2" width="1080" height="1350"></canvas>
+        <div data-hf-id="hf-dgkb" class="tag" id="s7-tag"><span data-hf-id="hf-bses" class="dot" style="background: var(--mint)"></span><span data-hf-id="hf-cyxp">Onde o Dinheiro Cai</span></div>
+        <h1 data-hf-id="hf-9sgy" id="s7-h"><span data-hf-id="hf-dd11" class="ln">Comece pela</span><span data-hf-id="hf-o0as" class="ln">sua cidade.</span></h1>
+        <div data-hf-id="hf-v9uw" id="s7-search">
+          <svg data-hf-id="hf-0fxm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle data-hf-id="hf-r9ft" cx="11" cy="11" r="7" /><path data-hf-id="hf-8pe5" d="m20 20-3.5-3.5" /></svg>
+          <span data-hf-id="hf-kurb" id="s7-typed"></span><span data-hf-id="hf-ngrb" id="caret"></span><span data-hf-id="hf-bjpb" id="s7-ph">Buscar cidade</span>
+        </div>
+        <div data-hf-id="hf-0c7c" id="s7-url">ondeodinheirocai.com.br</div>
+        <p data-hf-id="hf-tkos" id="s7-tl">Toda cidade merece entrar na conta.</p>
+        <div data-hf-id="hf-ukms" id="s7-sig"><b data-hf-id="hf-wlju">Samuel Pulcini</b> · pesquisa em andamento</div>
+      </div>
+      <!-- SFX: sons minimalistas sintetizados para o projeto (assets/sfx, gerador em assets/sfx/make_sfx.py) -->
+      <audio id="sfx-01" src="assets/sfx/air.wav" data-start="0.22" data-duration="0.42" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="sfx-02" src="assets/sfx/tap.wav" data-start="4.15" data-duration="0.22" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-03" src="assets/sfx/air.wav" data-start="6.82" data-duration="0.42" data-track-index="20" data-volume="0.36"></audio>
+      <audio id="sfx-04" src="assets/sfx/tick.wav" data-start="9.15" data-duration="0.09" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="sfx-05" src="assets/sfx/tap.wav" data-start="9.75" data-duration="0.22" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="sfx-06" src="assets/sfx/air.wav" data-start="14.85" data-duration="0.42" data-track-index="20" data-volume="0.26"></audio>
+      <audio id="sfx-07" src="assets/sfx/tap.wav" data-start="17.4" data-duration="0.22" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-08" src="assets/sfx/tap.wav" data-start="19.6" data-duration="0.22" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-09" src="assets/sfx/tap.wav" data-start="21.6" data-duration="0.22" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-10" src="assets/sfx/bloom.wav" data-start="23.2" data-duration="0.9" data-track-index="20" data-volume="0.42"></audio>
+      <audio id="sfx-11" src="assets/sfx/air.wav" data-start="25.32" data-duration="0.42" data-track-index="20" data-volume="0.36"></audio>
+      <audio id="sfx-12" src="assets/sfx/tick.wav" data-start="26.2" data-duration="0.09" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-13" src="assets/sfx/tick.wav" data-start="27.8" data-duration="0.09" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-14" src="assets/sfx/tick.wav" data-start="29.4" data-duration="0.09" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-15" src="assets/sfx/tick.wav" data-start="31.5" data-duration="0.09" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-16" src="assets/sfx/tick.wav" data-start="33.5" data-duration="0.09" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="sfx-17" src="assets/sfx/bloom.wav" data-start="34.0" data-duration="0.9" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="sfx-18" src="assets/sfx/air.wav" data-start="36.82" data-duration="0.42" data-track-index="20" data-volume="0.36"></audio>
+      <audio id="sfx-19" src="assets/sfx/tap.wav" data-start="39.3" data-duration="0.22" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-20" src="assets/sfx/tap.wav" data-start="40.8" data-duration="0.22" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-21" src="assets/sfx/bloom.wav" data-start="45.7" data-duration="0.9" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="sfx-22" src="assets/sfx/air.wav" data-start="50.82" data-duration="0.42" data-track-index="20" data-volume="0.36"></audio>
+      <audio id="sfx-23" src="assets/sfx/drop-1.wav" data-start="53.82" data-duration="0.08" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="sfx-24" src="assets/sfx/drop-2.wav" data-start="53.91" data-duration="0.08" data-track-index="20" data-volume="0.31"></audio>
+      <audio id="sfx-25" src="assets/sfx/drop-3.wav" data-start="54.0" data-duration="0.08" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-26" src="assets/sfx/drop-1.wav" data-start="54.09" data-duration="0.08" data-track-index="20" data-volume="0.32999999999999996"></audio>
+      <audio id="sfx-27" src="assets/sfx/drop-2.wav" data-start="54.18" data-duration="0.08" data-track-index="20" data-volume="0.33999999999999997"></audio>
+      <audio id="sfx-28" src="assets/sfx/drop-3.wav" data-start="54.27" data-duration="0.08" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="sfx-29" src="assets/sfx/drop-1.wav" data-start="54.36" data-duration="0.08" data-track-index="20" data-volume="0.36"></audio>
+      <audio id="sfx-30" src="assets/sfx/drop-2.wav" data-start="54.45" data-duration="0.08" data-track-index="20" data-volume="0.37"></audio>
+      <audio id="sfx-31" src="assets/sfx/drop-3.wav" data-start="54.54" data-duration="0.08" data-track-index="20" data-volume="0.38"></audio>
+      <audio id="sfx-32" src="assets/sfx/drop-1.wav" data-start="54.63" data-duration="0.08" data-track-index="20" data-volume="0.39"></audio>
+      <audio id="sfx-33" src="assets/sfx/drop-2.wav" data-start="54.72" data-duration="0.08" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="sfx-34" src="assets/sfx/air.wav" data-start="60.82" data-duration="0.42" data-track-index="20" data-volume="0.36"></audio>
+      <audio id="sfx-35" src="assets/sfx/tap.wav" data-start="61.9" data-duration="0.22" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-36" src="assets/sfx/tap.wav" data-start="63.5" data-duration="0.22" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-37" src="assets/sfx/tap.wav" data-start="65.1" data-duration="0.22" data-track-index="20" data-volume="0.32"></audio>
+      <audio id="sfx-38" src="assets/sfx/air-long.wav" data-start="72.18" data-duration="1.1" data-track-index="20" data-volume="0.34"></audio>
+      <audio id="sfx-39" src="assets/sfx/key.wav" data-start="74.6" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-40" src="assets/sfx/key.wav" data-start="74.679" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-41" src="assets/sfx/key.wav" data-start="74.757" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-42" src="assets/sfx/key.wav" data-start="74.836" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-43" src="assets/sfx/key.wav" data-start="74.914" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-44" src="assets/sfx/key.wav" data-start="74.993" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-45" src="assets/sfx/key.wav" data-start="75.071" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-46" src="assets/sfx/key.wav" data-start="75.15" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-47" src="assets/sfx/key.wav" data-start="75.307" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-48" src="assets/sfx/key.wav" data-start="75.386" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-49" src="assets/sfx/key.wav" data-start="75.464" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-50" src="assets/sfx/key.wav" data-start="75.543" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-51" src="assets/sfx/key.wav" data-start="75.621" data-duration="0.05" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="sfx-52" src="assets/sfx/chime-soft.wav" data-start="76.1" data-duration="1.71" data-track-index="20" data-volume="0.42"></audio>
+    </div>
+
+    <script type="module">
+      import * as THREE from "./assets/js/three.module.js";
+      const DUR = 82;
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const qa = (s) => Array.from(document.querySelectorAll(s));
+      const br = (v, d) => v.toFixed(d).replace(".", ",");
+
+      // ---------- helpers (doctrine: waterfall entry, cut-the-curve, nudge curve) ----------
+      function waterfallIn(els, t0) {
+        gsap.set(els, { opacity: 0 });
+        let t = t0;
+        els.forEach((el, i) => {
+          const heavy = el.textContent.trim().length > 4;
+          const y = heavy ? 76 : 44;
+          const d = heavy ? 0.2 : 0.14;
+          tl.set(el, { opacity: 1 }, t);
+          tl.fromTo(el, { y }, { y: 0, duration: d, ease: "power4.out", immediateRender: false }, t);
+          t += Math.max(0.06, d * 0.88 * Math.pow(0.9, i));
+        });
+        return t;
+      }
+      function waterfallCut(outEls, inEls, cut) {
+        outEls.forEach((el, i) => {
+          const s = cut - 0.34 + Math.min(i, 6) * 0.022;
+          tl.to(el, { x: -230, duration: 0.34, ease: "power4.in" }, s);
+          tl.to(el, { opacity: 0, duration: 0.18, ease: "none" }, s);
+        });
+        gsap.set(inEls, { x: 230, opacity: 0 });
+        let acc = 0;
+        inEls.forEach((el, i) => {
+          tl.fromTo(el, { x: 230, opacity: 0.35 }, { x: 0, opacity: 1, duration: 0.3, ease: "power4.out", immediateRender: false }, cut + acc);
+          acc += 0.05 * Math.pow(0.84, i);
+        });
+      }
+      function arrive(sel, t, y = 48, d = 0.55) {
+        const els = typeof sel === "string" ? qa(sel) : [].concat(sel);
+        gsap.set(els, { opacity: 0 });
+        tl.fromTo(els, { opacity: 0 }, { opacity: 1, duration: 0.14, ease: "none", immediateRender: false }, t);
+        tl.fromTo(els, { y }, { y: 0, duration: d, ease: "power4.out", immediateRender: false }, t);
+      }
+      function leaveLeft(sel, cut) {
+        tl.to(sel, { x: -230, duration: 0.34, ease: "power4.in" }, cut - 0.34);
+        tl.to(sel, { opacity: 0, duration: 0.2, ease: "none" }, cut - 0.34);
+      }
+      function counter(el, to, t, d, fmt) {
+        const o = { v: 0 };
+        el.textContent = fmt(0);
+        tl.to(o, { v: to, duration: d, ease: "power2.out", onUpdate: () => (el.textContent = fmt(o.v)) }, t);
+      }
+      function sweep(sel, t, d = 0.6) {
+        tl.fromTo(sel, { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: d, ease: "power2.inOut", immediateRender: false }, t);
+      }
+      function nudge(sel, t, to, total) {
+        // 10/65/25 distance over 20/18/62 time
+        const from = { x: 0, y: 0, scale: 1 };
+        const lerp = (k) => ({ x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k, scale: from.scale + (to.scale - from.scale) * k });
+        tl.to(sel, { ...lerp(0.1), duration: total * 0.2, ease: "power3.in" }, t);
+        tl.to(sel, { ...lerp(0.75), duration: total * 0.18, ease: "none" }, t + total * 0.2);
+        tl.to(sel, { ...lerp(1), duration: total * 0.62, ease: "power4.out" }, t + total * 0.38);
+      }
+
+      // ---------- map canvases (pure function of t) ----------
+      const MD = window.MAPDATA.p;
+      const m2 = q("#map2").getContext("2d");
+      const clamp = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+      const eo = (k) => 1 - Math.pow(1 - k, 3);
+      const NEU = [118, 156, 142], LOW = [236, 226, 218], AL = [176, 80, 58], GR = [47, 124, 89];
+      const mix = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+      const rad = (p) => 1.25 + Math.min(2.6, Math.sqrt(p[5]) / 70);
+
+      // ---------- mapa 3D (three.js): colunas reais por município, função pura do tempo ----------
+      const MW = 10, MH = 10 / 1.0574; // largura e profundidade do mapa em unidades
+      const cv3 = q("#map3d");
+      const gl3 = new THREE.WebGLRenderer({ canvas: cv3, alpha: true, antialias: true, preserveDrawingBuffer: true });
+      gl3.setPixelRatio(1);
+      gl3.setSize(1080, 1350, false);
+      gl3.setClearColor(0x000000, 0);
+      gl3.outputColorSpace = THREE.SRGBColorSpace;
+      const sc3 = new THREE.Scene();
+      const cam3 = new THREE.PerspectiveCamera(30, 1080 / 1350, 0.5, 200);
+      sc3.add(new THREE.HemisphereLight(0xffffff, 0xb9c6c0, 2.1));
+      const sun = new THREE.DirectionalLight(0xffffff, 1.15);
+      sun.position.set(-5, 9, 7);
+      sc3.add(sun);
+      // divisas dos estados no chão
+      {
+        const seg = [];
+        for (const ln of window.UFLINES) {
+          for (let k = 0; k < ln.length - 1; k++) {
+            seg.push((ln[k][0] - 0.5) * MW, 0.002, (ln[k][1] - 0.5) * MH, (ln[k + 1][0] - 0.5) * MW, 0.002, (ln[k + 1][1] - 0.5) * MH);
+          }
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.Float32BufferAttribute(seg, 3));
+        var borders = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x9fb3ab, transparent: true, opacity: 0 }));
+        sc3.add(borders);
+      }
+      const colGeo = new THREE.CylinderGeometry(1, 1, 1, 10);
+      colGeo.translate(0, 0.5, 0);
+      const cols = new THREE.InstancedMesh(colGeo, new THREE.MeshLambertMaterial({ color: 0xffffff }), MD.length);
+      cols.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      sc3.add(cols);
+      const m4 = new THREE.Matrix4(), col3 = new THREE.Color();
+      const BG = [230, 236, 232];
+      const smooth = (k) => k * k * (3 - 2 * k);
+      // nudge curve (10/65/25 em 20/18/62 do tempo) como função pura
+      function nudgeK(t, t0, dur) {
+        const u = clamp((t - t0) / dur);
+        if (u < 0.2) { const v = u / 0.2; return 0.1 * v * v * v; }
+        if (u < 0.38) return 0.1 + 0.65 * ((u - 0.2) / 0.18);
+        const v = (u - 0.38) / 0.62; return 0.75 + 0.25 * (1 - Math.pow(1 - v, 4));
+      }
+      const lerp = (a, b, k) => a + (b - a) * k;
+      function camAt(t) {
+        // A (7–15): vista de cima, leve aproximação enquanto os pontos surgem
+        const push = smooth(clamp((t - 7.0) / 3.2));
+        let dist = lerp(37.5, 35, push), phi = 0, yaw = 0, cx = 540, cy = 822;
+        // B (15.0–16.5): inclina para o 3D e abre espaço à direita
+        const kB = nudgeK(t, 15.0, 1.5);
+        phi = lerp(0, 46, kB); yaw = lerp(0, 10, kB); dist = lerp(dist, 43, kB);
+        cx = lerp(cx, 318, kB); cy = lerp(cy, 655, kB);
+        // C (19.6): pequeno giro quando entram as obras de saneamento
+        const kC = smooth(clamp((t - 19.6) / 1.3));
+        yaw = lerp(yaw, 18, kC);
+        // D (23.2): aproxima sobre o Norte e o Nordeste para os 49%
+        const kD = smooth(clamp((t - 23.2) / 1.5));
+        dist = lerp(dist, 41, kD); phi = lerp(phi, 50, kD); cy = lerp(cy, 640, kD); cx = lerp(cx, 300, kD);
+        return { dist, phi, yaw, cx, cy };
+      }
+      function renderMap3d(t) {
+        const c = camAt(t);
+        const ph = (c.phi * Math.PI) / 180, yw = (c.yaw * Math.PI) / 180;
+        cam3.position.set(c.dist * Math.sin(ph) * Math.sin(yw), c.dist * Math.cos(ph), c.dist * Math.sin(ph) * Math.cos(yw));
+        cam3.up.set(-Math.sin(yw) * Math.cos(ph), Math.sin(ph), -Math.cos(yw) * Math.cos(ph));
+        cam3.lookAt(0, 0, 0);
+        cam3.setViewOffset(1080, 1350, 540 - c.cx, 675 - c.cy, 1080, 1350);
+        borders.material.opacity = 0.75 * clamp((t - 9.6) / 0.8);
+        const fade49 = smooth(clamp((t - 23.3) / 0.7));
+        for (let i = 0; i < MD.length; i++) {
+          const p = MD[i];
+          const a = eo(clamp((t - (7.45 + p[1] * 1.9)) / 0.35));
+          let rgb = NEU;
+          let h = 0.02;
+          const k1 = clamp((t - (15.6 + p[1] * 1.2)) / 0.55);
+          if (p[2] >= 0) {
+            if (k1 > 0) {
+              rgb = mix(NEU, mix(LOW, AL, p[2] / 100), k1);
+              h = 0.02 + (p[2] / 100) * 0.95 * eo(k1);
+            }
+            const k2 = clamp((t - (20.0 + p[1] * 1.0)) / 0.4);
+            if (k2 > 0 && p[3] > 0) rgb = mix(rgb, GR, k2);
+            if (fade49 > 0 && !(p[2] > 50 && p[3] === 0)) {
+              rgb = mix(rgb, BG, 0.78 * fade49);
+              h = lerp(h, h * 0.22, fade49);
+            }
+          } else if (k1 > 0) {
+            rgb = mix(NEU, BG, k1);
+          }
+          const r = 0.03 * a;
+          m4.makeScale(r || 1e-5, Math.max(h, 0.001), r || 1e-5);
+          m4.setPosition((p[0] - 0.5) * MW, 0, (p[1] - 0.5) * MH);
+          cols.setMatrixAt(i, m4);
+          col3.setRGB(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, THREE.SRGBColorSpace);
+          cols.setColorAt(i, col3);
+        }
+        cols.instanceMatrix.needsUpdate = true;
+        cols.instanceColor.needsUpdate = true;
+        gl3.render(sc3, cam3);
+      }
+      function drawMap2(t) {
+        m2.clearRect(0, 0, 1080, 1350);
+        const s = 980, ox = 50, oy = 300;
+        for (let i = 0; i < MD.length; i++) {
+          const p = MD[i];
+          const a = clamp((t - (73.4 + (1 - p[1]) * 1.6)) / 0.5);
+          if (a <= 0) continue;
+          m2.fillStyle = `rgba(169,223,185,${0.2 * a})`;
+          m2.beginPath();
+          m2.arc(ox + p[0] * s, oy + p[1] * s * 0.946, rad(p) * 0.9, 0, 6.2832);
+          m2.fill();
+        }
+      }
+      const clock = { t: 0 };
+      function drawAll() {
+        const t = clock.t;
+        if (t > 6.9 && t < 25.6) renderMap3d(t);
+        if (t > 72.5) drawMap2(t);
+      }
+      drawAll();
+      tl.to(clock, { t: DUR, duration: DUR, ease: "none", onUpdate: drawAll }, 0);
+
+      // ===================== S1 (0 → 7.0) =====================
+      arrive("#s1-tag", 0.1, 30, 0.5);
+      waterfallIn(qa("#s1-h .w"), 0.35);
+      arrive("#s1-lead", 1.9, 40);
+      sweep("#s1-hl", 3.1, 0.7);
+      arrive(qa(".s1b"), 4.2, 36);
+
+      // ===================== S2 (7.0 → 25.5) =====================
+      counter(q("#s2-val"), 32.85, 7.6, 1.6, (v) => "R$ " + br(v, 2) + " bi");
+      arrive(qa(".s2c"), 9.8, 36);
+      arrive("#s2-src", 10.4, 20);
+      // phase B @15.0: headline waterfall cut + phase A content leaves left
+      waterfallCut(qa("#s2-ha .w"), qa("#s2-hb .w"), 15.0);
+      leaveLeft(["#s2-counter", "#s2-chips", "#s2-src"], 15.0);
+      arrive("#s2-legend", 16.5, 30);
+      arrive("#f1", 17.4);
+      counter(q("#f1n"), 63.1, 17.5, 0.9, (v) => br(v, 1) + "%");
+      arrive("#f2", 19.6);
+      counter(q("#f2n"), 7.0, 19.7, 0.7, (v) => br(v, 1) + "%");
+      arrive("#f3", 21.6);
+      counter(q("#f3n"), 47.2, 21.7, 0.9, (v) => br(v, 1) + "%");
+      arrive("#s2-take", 23.2, 40);
+      sweep("#s2-hl", 23.8, 0.6);
+
+      // ===================== S3 (25.5 → 37.0) =====================
+      const rows = [
+        ["#r1", 26.0, 0.9],
+        ["#r2", 27.6, 0.9],
+        ["#r3", 29.2, 0.9],
+        ["#r4", 31.3, 1.2],
+      ];
+      rows.forEach(([id, t, d]) => {
+        arrive(`${id} .head`, t, 30, 0.45);
+        gsap.set(qa(`${id} .bar-f, ${id} .bar-r`), { scaleX: 0 });
+        gsap.set(qa(`${id} .bv, ${id} .ratio`), { opacity: 0 });
+        tl.fromTo(`${id} .bar-f`, { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.out", immediateRender: false }, t + 0.2);
+        tl.fromTo(`${id} .bar-r`, { scaleX: 0 }, { scaleX: 1, duration: d, ease: "power3.out", immediateRender: false }, t + (id === "#r4" ? 0.75 : 0.4));
+        tl.fromTo(`${id} .bv`, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "none", immediateRender: false }, t + 0.7);
+        const rt = t + (id === "#r4" ? 2.2 : 1.1);
+        tl.fromTo(`${id} .ratio`, { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, rt);
+      });
+      arrive("#s3-punch", 34.0, 40);
+      sweep("#s3-hl", 34.5, 0.7);
+
+      // ===================== S4 (37.0 → 51.0) =====================
+      arrive("#s4-test", 38.6, 30, 0.45);
+      arrive("#v1", 39.3);
+      counter(q("#v1n"), 0.081, 39.4, 0.9, (v) => "+" + br(v, 3));
+      arrive("#s4-vs", 40.2, 20, 0.4);
+      arrive("#v2", 40.8);
+      counter(q("#v2n"), 0.021, 40.9, 0.9, (v) => (v > 0.0005 ? "−" : "") + br(v, 3));
+      arrive("#s4-c1", 43.3, 40);
+      arrive("#s4-c2", 45.7, 40);
+      sweep("#s4-hl", 46.1, 0.7);
+      arrive("#s4-src", 47.0, 20);
+
+      // ===================== S5 (51.0 → 61.0) =====================
+      arrive("#s5-card", 51.5, 40);
+      gsap.set("#axis", { scaleX: 0 });
+      tl.fromTo("#axis", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.out", immediateRender: false }, 51.9);
+      arrive(qa("#s5-card .tick"), 52.3, 16, 0.4);
+      arrive(["#chance", "#chance-l"], 52.8, 20, 0.45);
+      const pcts = [92, 93, 94, 95, 96, 97, 97.6, 98.2, 99, 99.5, 100];
+      const dotsBox = q("#dots");
+      pcts.forEach((p, i) => {
+        const d = document.createElement("span");
+        d.className = "vd";
+        d.style.left = `calc(40px + ${p / 100} * 760px)`;
+        dotsBox.appendChild(d);
+        gsap.set(d, { opacity: 0 });
+        const t = 53.7 + i * 0.09;
+        tl.set(d, { opacity: 1 }, t);
+        tl.fromTo(d, { y: -110 }, { y: 0, duration: 0.42, ease: "power4.out", immediateRender: false }, t);
+      });
+      gsap.set("#band", { scaleX: 0, opacity: 0 });
+      tl.fromTo("#band", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: "power3.out", immediateRender: false }, 55.3);
+      arrive("#band-l", 55.6, 24, 0.45);
+      arrive("#s5-txt", 56.6, 40);
+      arrive("#s5-note", 58.4, 36);
+
+      // ===================== S6 (61.0 → 73.0) =====================
+      arrive("#q1", 61.9);
+      arrive("#q2", 63.5);
+      arrive("#q3", 65.1);
+      arrive("#s6-lim", 67.6, 30);
+
+      // ===================== S7 (73.0 → 82.0) =====================
+      arrive("#s7-search", 73.9, 40);
+      const city = "Ribeirão Preto";
+      const typed = q("#s7-typed"), ph = q("#s7-ph");
+      const ty = { n: 0 };
+      tl.to(ty, {
+        n: city.length, duration: 1.1, ease: "none",
+        onUpdate: () => { const k = Math.round(ty.n); typed.textContent = city.slice(0, k); ph.textContent = k > 0 ? "" : "Buscar cidade"; },
+      }, 74.6);
+      arrive("#s7-url", 76.1, 40);
+      arrive("#s7-tl", 77.1, 36);
+      arrive("#s7-sig", 77.9, 20);
+
+      // <seams:auto> — generated by seam-stamp.mjs from ledger.json; do not hand-edit.
+      // Regenerate: node tools/seam-stamp.mjs --ledger ledger.json --write index.html
+      gsap.set("#el-s1", { autoAlpha: 1, xPercent: 0, yPercent: 0, scale: 1, filter: "blur(0px)", transformOrigin: "50% 50%" });
+      gsap.set(["#el-s2","#el-s3","#el-s4","#el-s5","#el-s6"], { autoAlpha: 0, xPercent: 0, yPercent: 0, scale: 1, filter: "blur(0px)", transformOrigin: "50% 50%" });
+      gsap.set("#el-s7", { autoAlpha: 0, scale: 1.25, filter: "blur(18px)", xPercent: 0, yPercent: 0, transformOrigin: "50% 50%" });
+      
+      // SEAM — pergunta→cruzamento : cut-the-curve LEFT (cut @7)
+      tl.to("#el-s1", { xPercent: -12, autoAlpha: 0, duration: 0.34, ease: "power3.in" }, 6.66);
+      tl.set("#el-s1", { autoAlpha: 0 }, 7);
+      tl.fromTo("#el-s2", { xPercent: 10, autoAlpha: 0.35 }, { xPercent: 0, autoAlpha: 1, duration: 0.42, ease: "power4.out", immediateRender: false }, 7);
+      
+      // SEAM — mapa→distância : cut-the-curve LEFT (cut @25.5)
+      tl.to("#el-s2", { xPercent: -12, autoAlpha: 0, duration: 0.34, ease: "power3.in" }, 25.16);
+      tl.set("#el-s2", { autoAlpha: 0 }, 25.5);
+      tl.fromTo("#el-s3", { xPercent: 10, autoAlpha: 0.35 }, { xPercent: 0, autoAlpha: 1, duration: 0.42, ease: "power4.out", immediateRender: false }, 25.5);
+      
+      // SEAM — distância→objeção : cut-the-curve LEFT (cut @37)
+      tl.to("#el-s3", { xPercent: -12, autoAlpha: 0, duration: 0.34, ease: "power3.in" }, 36.66);
+      tl.set("#el-s3", { autoAlpha: 0 }, 37);
+      tl.fromTo("#el-s4", { xPercent: 10, autoAlpha: 0.35 }, { xPercent: 0, autoAlpha: 1, duration: 0.42, ease: "power4.out", immediateRender: false }, 37);
+      
+      // SEAM — objeção→votos : cut-the-curve LEFT (cut @51)
+      tl.to("#el-s4", { xPercent: -12, autoAlpha: 0, duration: 0.34, ease: "power3.in" }, 50.66);
+      tl.set("#el-s4", { autoAlpha: 0 }, 51);
+      tl.fromTo("#el-s5", { xPercent: 10, autoAlpha: 0.35 }, { xPercent: 0, autoAlpha: 1, duration: 0.42, ease: "power4.out", immediateRender: false }, 51);
+      
+      // SEAM — votos→proposta (conclusão sobe) : cut-the-curve UP (cut @61)
+      tl.to("#el-s5", { yPercent: -12, autoAlpha: 0, duration: 0.34, ease: "power3.in" }, 60.66);
+      tl.set("#el-s5", { autoAlpha: 0 }, 61);
+      tl.fromTo("#el-s6", { yPercent: 10, autoAlpha: 0.35 }, { yPercent: 0, autoAlpha: 1, duration: 0.42, ease: "power4.out", immediateRender: false }, 61);
+      
+      // SEAM — proposta→cta (chegada) : inverse zoom-through (cut @73)
+      tl.to("#el-s6", { scale: 0.8, filter: "blur(18px)", duration: 0.21, ease: "power3.in" }, 72.79);
+      tl.to("#el-s6", { autoAlpha: 0, duration: 0.21, ease: "none" }, 72.79);
+      tl.set("#el-s6", { autoAlpha: 0 }, 73);
+      tl.fromTo("#el-s7", { autoAlpha: 0.15, scale: 1.25, filter: "blur(18px)" }, { autoAlpha: 1, scale: 1.0, filter: "blur(0px)", duration: 0.5, ease: "expo.out", immediateRender: false }, 73);
+      
+      // </seams:auto>
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+{
+  "fps": 30,
+  "current": "LEFT",
+  "seams": [
+    {
+      "id": "pergunta→cruzamento",
+      "cut": 7.0,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#el-s1", "axis": "x", "dir": -1 },
+      "entry": { "selector": "#el-s2", "axis": "x", "dir": -1 }
+    },
+    {
+      "id": "mapa→distância",
+      "cut": 25.5,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#el-s2", "axis": "x", "dir": -1 },
+      "entry": { "selector": "#el-s3", "axis": "x", "dir": -1 }
+    },
+    {
+      "id": "distância→objeção",
+      "cut": 37.0,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#el-s3", "axis": "x", "dir": -1 },
+      "entry": { "selector": "#el-s4", "axis": "x", "dir": -1 }
+    },
+    {
+      "id": "objeção→votos",
+      "cut": 51.0,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#el-s4", "axis": "x", "dir": -1 },
+      "entry": { "selector": "#el-s5", "axis": "x", "dir": -1 }
+    },
+    {
+      "id": "votos→proposta (conclusão sobe)",
+      "cut": 61.0,
+      "technique": "cut-the-curve UP",
+      "exit": { "selector": "#el-s5", "axis": "y", "dir": -1 },
+      "entry": { "selector": "#el-s6", "axis": "y", "dir": -1 }
+    },
+    {
+      "id": "proposta→cta (chegada)",
+      "cut": 73.0,
+      "technique": "inverse zoom-through",
+      "blur": 18,
+      "exit": { "selector": "#el-s6", "axis": "z", "dir": -1 },
+      "entry": { "selector": "#el-s7", "axis": "z", "dir": -1, "scanRoot": "#el-s7" }
+    }
+  ]
+}
